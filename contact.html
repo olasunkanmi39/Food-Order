@@ -158,64 +158,58 @@
                 </div>
             </div>
         </div>
-        
+        <!-- Contact End -->
          <script>
             document.getElementById('messageForm').addEventListener('submit', function(e) {
                 e.preventDefault(); // Prevent the default form submission
-        
+
                 // Get form values 
                 const formData = {
                     name: document.getElementById('name').value,
                     email: document.getElementById('email').value,
                     subject: document.getElementById('subject').value,
                     message: document.getElementById('message').value
-                };
-        
-                // Basic validation
-                if (!formData.name || !formData.email || !formData.message) {
-                    showStatus('Please fill in all required fields.', 'error');
-                    return;
-                }
-        
-                sendToGoogleAppsScript(formData);
-            });
-        
-            function sendToGoogleAppsScript(formData) {
-                // Replace with your Google Apps Script Web App URL
-                const scriptURL = 'https://script.google.com/macros/s/AKfycbzTDRLO0YihR3MGCunpkZZWJHNR3YV4x5-v86Z5ndQI4vK37XWI4UXpkjifGJ6iczSW/exec';
-                
-                fetch(scriptURL, {
-                    method: 'POST',
-                    mode: 'no-cors', // Add this for Google Apps Script
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded', // Changed content type
+                     };
+
+                  sendToGoogleAppsScript(formData);
+
+                    });
+            
+                    function sendToGoogleAppsScript(formData) {
+                     // Replace with your Google Apps Script Web App URL
+            const scriptURL ='https://script.google.com/macros/s/AKfycbwxWQUcDZBE6WeqxEaCVRmockq2A4ZBCUTgOz-31Pu4UszYxeb_Z723lBS-M6ue0MIQ1A/exec';
+            
+            fetch(scriptURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
                     },
-                    body: new URLSearchParams(formData) // Changed how we send data
-                })
-                .then(response => {
-                    // With no-cors mode, we can't read the response
-                    showStatus('Message sent successfully!', 'success');
-                    document.getElementById('messageForm').reset();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showStatus('Failed to send message. Please try again.', 'error');
-                });
-            }
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                showStatus('Message sent successfully!', 'success');
+                document.getElementById('messageForm').reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showStatus('Failed to send message. Please try again.', 'error');
+            });
+        }
              
-            function showStatus(message, type) {
-                const statusDiv = document.getElementById('status');
-                statusDiv.textContent = message;
-                statusDiv.className = type;
-                statusDiv.style.display = 'block';
-                
-                setTimeout(() => {
-                    statusDiv.style.display = 'none';
-                }, 5000);
-            }
-        
-         </script> 
-      
+         function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = type;
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+
+         </script>
+
 
         <!-- Footer Start -->
         <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
